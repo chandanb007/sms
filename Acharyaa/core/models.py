@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 User = get_user_model()
-
 class Media(models.Model):
     class Meta:
         verbose_name = "Media"
@@ -118,7 +117,7 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.user} on {self.post}"
 
-
+    
 
 
 

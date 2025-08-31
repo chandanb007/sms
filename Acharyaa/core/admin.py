@@ -1,7 +1,4 @@
 from django.contrib import admin
-from student.models import Student,Performance
-from teacher.models import Teacher
-from parent.models import Parent
 from .models import Country
 from .models import DietaryNeed
 from .models import Language
@@ -23,20 +20,6 @@ admin.site.index_title = "Welcome to " + settings.APP_NAME
 class MediaInline(GenericTabularInline):
     model = Media
     extra = 1
-   
-class StudentPerformance(admin.TabularInline):
-    model = Performance
-    extra = 0   # number of empty comment forms to show
-    fields = ("year","exam","marksObtained","subject","totalMarks","finalGrade")
-    readonly_fields = ("created_at",)
-
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ("username", "email", "first_name", "last_name")
-    search_fields = ("title", "author__username")
-    inlines = [StudentPerformance,MediaInline]
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(groups__name="Student")   # filter only students
 class ParentAdmin(admin.ModelAdmin):
     list_display = ("username", "email", "first_name", "last_name")
     
@@ -45,7 +28,7 @@ class ParentAdmin(admin.ModelAdmin):
         return qs.filter(groups__name="Parent")   # filter only parents
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ("username", "email", "first_name", "last_name")
-    
+    search_fields = ("first_name", "last_name", "username",'email')
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.filter(groups__name="Teacher")   # filter only teacher
@@ -57,22 +40,37 @@ class PostCommentInline(admin.TabularInline):  # or StackedInline
     readonly_fields = ("created_at",)
 
 class PostAdmin(admin.ModelAdmin):   # Unfold styling
-    list_display = ("title", "author", "created_at")
+    list_display = ("title", "author", "status", "created_at")
     search_fields = ("title", "author__username")
     inlines = [PostCommentInline,MediaInline]
 
 class ExamAdmin(admin.ModelAdmin):
     list_display = ("name", "status", "created_at")
+    search_fields = ("name",)
  
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ("name","iso")
+    search_fields = ("name","iso")
 
-admin.site.register(Country)
-admin.site.register(DietaryNeed)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Teacher, TeacherAdmin)
-admin.site.register(Parent, ParentAdmin)
-admin.site.register(Language)
-admin.site.register(Religion)
-admin.site.register(Subject)
+class DietaryNeedAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+
+class ReligionAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ("name","code","status",)
+    search_fields = ("name","code","status",)
+
+admin.site.register(Country, CountryAdmin)
+admin.site.register(DietaryNeed,DietaryNeedAdmin)
+admin.site.register(Language,LanguageAdmin)
+admin.site.register(Religion,ReligionAdmin)
+admin.site.register(Subject,SubjectAdmin)
 admin.site.register(Post, PostAdmin)
-admin.site.register(Performance)
 admin.site.register(Exam, ExamAdmin)
