@@ -3,14 +3,8 @@ from django.db import models
 from django.conf import settings
 
 class CustomUser(AbstractUser):
-    # Add any extra fields common to all users
-    mobile = models.CharField(max_length=15, blank=True, null=True)
-    ROLE_CHOICES = (
-        ("student", "Student"),
-        ("teacher", "Teacher"),
-        ("staff", "Staff"),
-    )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, null=True)
+    first_name = models.CharField(max_length=100,blank=False)
+    last_name = models.CharField(max_length=100,blank=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
